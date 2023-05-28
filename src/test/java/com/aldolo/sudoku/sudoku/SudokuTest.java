@@ -1,8 +1,6 @@
 package com.aldolo.sudoku.sudoku;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
@@ -12,7 +10,7 @@ public class SudokuTest {
 
     @Test
     @DisplayName("GetAsRowMap with full list")
-    public void getAsRowMap_fullList() {
+    public void getAsRowMap() {
         List<Integer> numbers = new ArrayList<>();
         List<Integer> rowResult = Arrays.asList(1,2,3,4,5,6,7,8,9);
         for (int i = 0; i < 9; i++) {
@@ -51,7 +49,7 @@ public class SudokuTest {
 
     @Test
     @DisplayName("GetAsColumnMap with full list")
-    public void getAsColumnMap_fullList() {
+    public void getAsColumnMap() {
         List<Integer> numbers = new ArrayList<>();
         List<Integer> row = Arrays.asList(0,1,2,3,4,5,6,7,8);
         for (int i = 0; i < 9; i++) {
@@ -88,7 +86,7 @@ public class SudokuTest {
 
     @Test
     @DisplayName("GetAsColumnMap with full list")
-    public void getAsSubMatrixMap_fullList() {
+    public void getAsSubMatrixMap() {
         List<Integer> numbers = new ArrayList<>();
         List<Integer> row = Arrays.asList(0,1,2,3,4,5,6,7,8);
         for (int i = 0; i < 9; i++) {
@@ -129,5 +127,50 @@ public class SudokuTest {
         mapResult.put(7, new ArrayList<>());
         mapResult.put(8, new ArrayList<>());
         Assertions.assertEquals(mapResult, testSudoku.getAsSubMatrixMap(), "SubMatrixMap generation error");
+    }
+
+    @Test
+    @DisplayName("IsComplete with full list")
+    void isComplete() {
+        List<Integer> numbers = new ArrayList<>();
+        List<Integer> rowResult = Arrays.asList(1,2,3,4,5,6,7,8,9);
+        for (int i = 0; i < 9; i++) {
+            numbers.addAll(rowResult);
+        }
+        Sudoku testSudoku = new Sudoku(numbers);
+        Assertions.assertTrue(testSudoku.isComplete(), "IsComplete error");
+    }
+
+    @Test
+    @DisplayName("IsComplete with partial list")
+    void isComplete_partialList() {
+        List<Integer> numbers = new ArrayList<>();
+        List<Integer> row = Arrays.asList(1,2,3,4,5,6,7,8,9);
+        List<Integer> partialRow = Arrays.asList(1,2,3,4,5);
+        numbers.addAll(row);
+        numbers.addAll(partialRow);
+        Sudoku testSudoku = new Sudoku(numbers);
+        Assertions.assertFalse(testSudoku.isComplete(), "IsComplete error");
+    }
+
+    @Test
+    @DisplayName("IsValid with valid option")
+    void isValid() {
+        Sudoku testSudoku = new Sudoku(Arrays.asList(1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,4,5,6,7,8,9,1,5,6,7,8,9,1,2,3,4,8,9,1,2,3,4,5,6,7,3,4,5,6,7,8,9,1,2,6,7,8,9,1,2,3,4,5,9,1,2,3,4,5,6,7,8));
+        Assertions.assertTrue(testSudoku.isValid(), "IsValid error");
+    }
+
+    @Test
+    @DisplayName("IsValid with not valid option")
+    void isValid_NotValidOption() {
+        Sudoku testSudoku = new Sudoku(Arrays.asList(1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,1,1,2,3,4,5,6,2,3,4,5,6,7,8,9,1,5,6,7,8,9,1,2,3,4,8,9,1,2,3,4,5,6,7,3,4,5,6,7,8,9,1,2,6,7,8,9,1,2,3,4,5,9,1,2,3,4,5,6,7,8));
+        Assertions.assertFalse(testSudoku.isValid(), "IsValid error");
+    }
+
+    @Test
+    @DisplayName("IsValid with incomplete option")
+    void isValid_IncompleteOption() {
+        Sudoku testSudoku = new Sudoku(Arrays.asList(1,2,3,4,5,6,7,8,9,4,5,6,7,8,9,1,2,3,7,8,9,1,2,3,4,5,6,2,3,4,5,6,7,8,9,1,5,6,7,8,9,1,2,3,4,8,9,1,2,3,4,5,6,7,3,4,5,6,7,8,9,1,2,6,7,8,9,1,2,3,4,5,9,1,2,3,4,5,6,7));
+        Assertions.assertFalse(testSudoku.isValid(), "IsValid error");
     }
 }

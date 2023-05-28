@@ -4,17 +4,17 @@ import java.util.*;
 
 public class Sudoku {
     
-    private static final Map<Integer, List<Integer>> subMatrixIndexes = new HashMap<>();
+    public static final Map<Integer, List<Integer>> SUB_MATRIX_INDEXES = new HashMap<>();
     static {
-        subMatrixIndexes.put(0, Arrays.asList(0,1,2,9,10,11,18,19,20));
-        subMatrixIndexes.put(1, Arrays.asList(3,4,5,12,13,14,21,22,23));
-        subMatrixIndexes.put(2, Arrays.asList(6,7,8,15,16,17,24,25,26));
-        subMatrixIndexes.put(3, Arrays.asList(27,28,29,36,37,38,45,46,47));
-        subMatrixIndexes.put(4, Arrays.asList(30,31,32,39,40,41,48,49,50));
-        subMatrixIndexes.put(5, Arrays.asList(33,34,35,42,43,44,51,52,53));
-        subMatrixIndexes.put(6, Arrays.asList(54,55,56,63,64,65,72,73,74));
-        subMatrixIndexes.put(7, Arrays.asList(57,58,59,66,67,68,75,76,77));
-        subMatrixIndexes.put(8, Arrays.asList(60,61,62,69,70,71,78,79,80));
+        SUB_MATRIX_INDEXES.put(0, Arrays.asList(0,1,2,9,10,11,18,19,20));
+        SUB_MATRIX_INDEXES.put(1, Arrays.asList(3,4,5,12,13,14,21,22,23));
+        SUB_MATRIX_INDEXES.put(2, Arrays.asList(6,7,8,15,16,17,24,25,26));
+        SUB_MATRIX_INDEXES.put(3, Arrays.asList(27,28,29,36,37,38,45,46,47));
+        SUB_MATRIX_INDEXES.put(4, Arrays.asList(30,31,32,39,40,41,48,49,50));
+        SUB_MATRIX_INDEXES.put(5, Arrays.asList(33,34,35,42,43,44,51,52,53));
+        SUB_MATRIX_INDEXES.put(6, Arrays.asList(54,55,56,63,64,65,72,73,74));
+        SUB_MATRIX_INDEXES.put(7, Arrays.asList(57,58,59,66,67,68,75,76,77));
+        SUB_MATRIX_INDEXES.put(8, Arrays.asList(60,61,62,69,70,71,78,79,80));
     }
     private List<Integer> fullList;
     public Sudoku() {
@@ -46,7 +46,7 @@ public class Sudoku {
 
     public List<Integer> getSubMatrix(int subMatrixNumber) {
         List<Integer> subMatrix = new ArrayList<>();
-        for (int i : subMatrixIndexes.get(subMatrixNumber)) {
+        for (int i : SUB_MATRIX_INDEXES.get(subMatrixNumber)) {
             if (i < getFullList().size()) {
                 subMatrix.add(getFullList().get(i));
             }
@@ -76,5 +76,39 @@ public class Sudoku {
             subMatrixMap.put(i, getSubMatrix(i));
         }
         return subMatrixMap;
+    }
+
+    public boolean isComplete() {
+        return getFullList().size() == 81;
+    }
+
+    public boolean isValid() {
+        if (!isComplete()) {
+            return false;
+        } else if (Collections.max(getFullList()) > 9 || Collections.min(getFullList()) < 1) {
+            return false;
+        }
+
+        Set<Integer> comparisonSet;
+        for (List<Integer> row : getAsRowMap().values()) {
+            comparisonSet = new HashSet<>(row);
+            if (row.size() != comparisonSet.size()) {
+                return false;
+            }
+        }
+        for (List<Integer> column : getAsColumnMap().values()) {
+            comparisonSet = new HashSet<>(column);
+            if (column.size() != comparisonSet.size()) {
+                return false;
+            }
+        }
+        for (List<Integer> subMatrix : getAsSubMatrixMap().values()) {
+            comparisonSet = new HashSet<>(subMatrix);
+            if (subMatrix.size() != comparisonSet.size()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
